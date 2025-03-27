@@ -1,0 +1,2 @@
+📅 ﹝ 2025年3月26日 ﹞：
+	TUN_alpha_mixed_v12.json：文件在更新了 singbox 内核 sing-box-1.12.0-alpha.20-windows-amd64 之后已废弃。因为启动服务会报错：「start service: start dns/https[dns-resolver-tencent]: detour to an empty direct outbound makes no sense」，在 dns 模块中设置 DNS 的时候，如果 detour 为直连的 🎯全球连接 则会出现这个问题。
