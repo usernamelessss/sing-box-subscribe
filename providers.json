@@ -1,16 +1,29 @@
 {
     "subscribes":[
         {
-            "url": "机场订阅地址",
-            "tag": "机场名称（自定义）",
+            "url": "URL",
+            "tag": "tag_1",
             "enabled": true,
             "emoji": 1,
             "subgroup": "",
             "prefix": "",
             "ex-node-name": "",
-            "User-Agent":"sing-box"
+            "User-Agent":"v2rayng"
+        },
+        {
+            "url": "URL",
+            "tag": "tag_2",
+            "enabled": false,
+            "emoji": 0,
+            "subgroup": "鍛藉悕/named",
+            "prefix": "鉂わ笍",
+            "User-Agent":"clashmeta"
         }
     ],
+    "auto_set_outbounds_dns":{
+        "proxy": "",
+        "direct": ""
+    },
     "save_config_path": "./config.json",
     "auto_backup": false,
     "exclude_protocol":"ssr",
