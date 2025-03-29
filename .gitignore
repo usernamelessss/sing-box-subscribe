@@ -11,3 +11,10 @@ venv/
 ENV/ 
 env.bak/ 
 venv.bak/ 
+
+# Designate Fils.
+providers_now.json
+config.json
+
+# Designate Directory.
+.idea/

@@ -154,8 +154,26 @@ def get_nodes(url):
     if type(content) == dict:
         if 'proxies' in content:
             share_links = []
+            # 遍历代理信息
+            note_count = 0
             for proxy in content['proxies']:
+                note_count += 1
+                proxy_name = proxy['name']
+                proxy_protocol = proxy['type']
+                # 特殊节点重命名
+                if "官网" in proxy_name and "superflash" in proxy_name:
+                    proxy['name'] = "♥️ 官网推荐节点"
+                if "备用" in proxy_name and "superflash" in proxy_name:
+                    proxy['name'] = "💊 官网备用节点 1️⃣"
+                if "连不上" in proxy_name and "尝试更新" in proxy_name:
+                    proxy['name'] = "💊 官网备用节点 2️⃣"
+                if "有问题" in proxy_name and "联系客服" in proxy_name:
+                    proxy['name'] = "💊 官网备用节点 3️⃣"
+                if "官网" in proxy_name and "开关" in proxy_name:
+                    proxy['name'] = "💊 官网备用节点 4️⃣"
+                print('     \33[36;1m【{0}\033[0m \33[35;1m{1}\033[0m 协议节点】'.format(proxy_name, proxy_protocol))
                 share_links.append(clash2v2ray(proxy))
+            print('\33[31;1m获取的节点数量为:{0}'.format(note_count))
             data = '\n'.join(share_links)
             data = parse_content(data)
             processed_list = []
@@ -223,8 +241,7 @@ def get_parser(node):
 
 def get_content_from_url(url, n=10):
     UA = ''
-    print('处理: \033[31m' + url + '\033[0m')
-    # print('Đang tải link đăng ký: \033[31m' + url + '\033[0m')
+    print('处理: \033[34;4m' + url + '\033[0m')
     prefixes = ["vmess://", "vless://", "ss://", "ssr://", "trojan://", "tuic://", "hysteria://", "hysteria2://",
                 "hy2://", "wg://", "wireguard://", "http2://", "socks://", "socks5://"]
     if any(url.startswith(prefix) for prefix in prefixes):
@@ -294,8 +311,6 @@ def get_content_from_url(url, n=10):
 
 def get_content_form_file(url):
     print('处理: \033[31m' + url + '\033[0m')
-    # print('Đang tải link đăng ký: \033[31m' + url + '\033[0m')
-    # encoding = tool.get_encoding(url)
     file_extension = os.path.splitext(url)[1]  # 获取文件的后缀名
     if file_extension.lower() == '.yaml':
         with open(url, 'rb') as file:
@@ -322,7 +337,7 @@ def save_config(path, nodes):
                 os.rename(path, f'{path}.{now}.bak')
         if os.path.exists(path):
             os.remove(path)
-            print(f"已删除文件，并重新保存：\033[33m{path}\033[0m")
+            print(f"\033[37m已删除文件，并重新保存：\033[0m\033[33m{path}\033[0m")
             # print(f"File cấu hình đã được lưu vào: \033[33m{path}\033[0m")
         else:
             print(f"文件不存在，正在保存：\033[33m{path}\033[0m")
@@ -587,12 +602,19 @@ if __name__ == '__main__':
     else:
         # providers = load_json('providers.json')  # 加载本地 providers.json
         providers = load_json('providers_now.json')  # 加载本地 providers.json
-    if providers.get('config_template'):
+    # 配置中获取模板参数
+    local_template_config = providers.get('local_config_template')
+    remote_template_config = providers.get('config_template')
+    if remote_template_config:
         config_template_path = providers['config_template']
         print('选择: \033[33m' + config_template_path + '\033[0m')
         response = requests.get(providers['config_template'])
         response.raise_for_status()
         config = response.json()
+    elif local_template_config:
+        comment = providers['local_config_template_comment']
+        print('\033[32;1m{0}'.format(comment))
+        config = load_json(local_template_config)
     else:
         template_list = get_template()
         if len(template_list) < 1:
