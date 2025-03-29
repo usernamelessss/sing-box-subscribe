@@ -1,9 +1,18 @@
-import json, os, tool, time, requests, sys, importlib, argparse, yaml, ruamel.yaml
+import argparse
+import importlib
+import json
+import os
 import re
+import requests
+import ruamel.yaml
+import sys
+import time
+import tool
+import yaml
+from collections import OrderedDict
 from datetime import datetime
 from urllib.parse import urlparse
-from collections import OrderedDict
-from api.app import TEMP_DIR
+
 from parsers.clash2base64 import clash2v2ray
 
 parsers_mod = {}
@@ -157,6 +166,7 @@ def get_nodes(url):
             # 遍历代理信息
             note_count = 0
             for proxy in content['proxies']:
+                time.sleep(0.001)
                 note_count += 1
                 proxy_name = proxy['name']
                 proxy_protocol = proxy['type']
