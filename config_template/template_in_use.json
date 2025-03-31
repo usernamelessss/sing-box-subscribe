@@ -773,26 +773,6 @@
       },
      {
         "action": "route",
-        "rule_set": "🇨🇳 ChinaIPs",
-        "outbound": "🎯 全球直连"
-      },
-     {
-        "action": "route",
-        "rule_set": "🇨🇳 ChinaIPsBGP",
-        "outbound": "🎯 全球直连"
-      },
-     {
-        "action": "route",
-        "rule_set": "🇨🇳 GeoIP-Private",
-        "outbound": "🎯 全球直连"
-      },
-     {
-        "action": "route",
-        "rule_set": "🇨🇳 GeoIP-CN",
-        "outbound": "🎯 全球直连"
-      },
-     {
-        "action": "route",
         "rule_set": "🍊 Google：Gemini",
         "outbound": "🤖 Google：Gemini"
       },
@@ -955,6 +935,26 @@
         "action": "route",
         "rule_set": "📡 Global：Global",
         "outbound": "📡 全球代理"
+      },
+     {
+        "action": "route",
+        "rule_set": "🇨🇳 ChinaIPs",
+        "outbound": "🎯 全球直连"
+      },
+     {
+        "action": "route",
+        "rule_set": "🇨🇳 ChinaIPsBGP",
+        "outbound": "🎯 全球直连"
+      },
+     {
+        "action": "route",
+        "rule_set": "🇨🇳 GeoIP-Private",
+        "outbound": "🎯 全球直连"
+      },
+     {
+        "action": "route",
+        "rule_set": "🇨🇳 GeoIP-CN",
+        "outbound": "🎯 全球直连"
       },
      {
         "action": "route",
