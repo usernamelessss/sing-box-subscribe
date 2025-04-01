@@ -177,7 +177,7 @@ def get_nodes(url):
                     node_region_msg = tool.get_node_region_by_domain(proxy_domain)
                     proxy['name'] = f"♥️ 推荐 0{str(same_flag)} {node_region_msg.country}"
                     if node_region_msg.city is not None:
-                        proxy['name'] = f"{proxy.name} {node_region_msg.city}"
+                        proxy['name'] = f"{proxy['name']} {node_region_msg.city}"
                     print('\033[31m==> 处理不规则节点:[{0}]=>[{1}]'.format(proxy_name, proxy['name']))
                 print('     \33[36;1m【{0}\033[0m \33[35;1m{1}\033[0m 协议节点】'.format(proxy_name, proxy_protocol))
                 share_links.append(clash2v2ray(proxy))
