@@ -180,7 +180,7 @@ def get_nodes(url):
                 proxy_domain = proxy['server']
                 if '官网' in proxy_name or '备用' in proxy_name or '连不上' in proxy_name or '有问题' in proxy_name or '客服' in proxy_name or '推荐' in proxy_name:
                     node_region_msg = tool.get_node_region_by_domain(proxy_domain)
-                    proxy['name'] = f"♥️ 推荐{node_region_msg.country} 0{str(note_count)} "
+                    proxy['name'] = f"♥️ 推荐 {node_region_msg.country} 0{str(note_count)}"
                     if node_region_msg.city is not None:
                         proxy['name'] = f"{proxy['name']} {node_region_msg.city}"
                     print('\033[31m==> 处理不规则节点:[{0}]=>[{1}]'.format(proxy_name, proxy['name']))
