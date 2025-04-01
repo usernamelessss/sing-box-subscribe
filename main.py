@@ -124,6 +124,13 @@ def add_prefix(nodes, subscribe):
 
 
 def add_emoji(nodes, subscribe):
+    '''
+    添加 emoji
+    :param nodes:
+    :param subscribe:
+    :return:
+    '''
+
     if subscribe.get('emoji'):
         for node in nodes:
             node['tag'] = tool.rename(node['tag'])
@@ -171,11 +178,9 @@ def get_nodes(url):
                 proxy_name = proxy['name']
                 proxy_protocol = proxy['type']
                 proxy_domain = proxy['server']
-                same_flag = 0
                 if '官网' in proxy_name or '备用' in proxy_name or '连不上' in proxy_name or '有问题' in proxy_name or '客服' in proxy_name or '推荐' in proxy_name:
-                    same_flag += 1
                     node_region_msg = tool.get_node_region_by_domain(proxy_domain)
-                    proxy['name'] = f"♥️ 推荐 0{str(same_flag)} {node_region_msg.country}"
+                    proxy['name'] = f"♥️ 推荐{node_region_msg.country} 0{str(note_count)} "
                     if node_region_msg.city is not None:
                         proxy['name'] = f"{proxy['name']} {node_region_msg.city}"
                     print('\033[31m==> 处理不规则节点:[{0}]=>[{1}]'.format(proxy_name, proxy['name']))
