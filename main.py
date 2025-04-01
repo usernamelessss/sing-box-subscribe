@@ -170,17 +170,15 @@ def get_nodes(url):
                 note_count += 1
                 proxy_name = proxy['name']
                 proxy_protocol = proxy['type']
-                # 特殊节点重命名
-                if "官网" in proxy_name and "superflash" in proxy_name:
-                    proxy['name'] = "♥️ 官网推荐节点"
-                if "备用" in proxy_name and "superflash" in proxy_name:
-                    proxy['name'] = "💊 官网备用节点 1️⃣"
-                if "连不上" in proxy_name and "尝试更新" in proxy_name:
-                    proxy['name'] = "💊 官网备用节点 2️⃣"
-                if "有问题" in proxy_name and "联系客服" in proxy_name:
-                    proxy['name'] = "💊 官网备用节点 3️⃣"
-                if "官网" in proxy_name and "开关" in proxy_name:
-                    proxy['name'] = "💊 官网备用节点 4️⃣"
+                proxy_domain = proxy['server']
+                same_flag = 0
+                if '官网' in proxy_name or '备用' in proxy_name or '连不上' in proxy_name or '有问题' in proxy_name or '客服' in proxy_name or '推荐' in proxy_name:
+                    same_flag += 1
+                    node_region_msg = tool.get_node_region_by_domain(proxy_domain)
+                    proxy['name'] = f"♥️ 推荐 0{str(same_flag)} {node_region_msg.country}"
+                    if node_region_msg.city is not None:
+                        proxy['name'] = f"{proxy.name} {node_region_msg.city}"
+                    print('\033[31m==> 处理不规则节点:[{0}]=>[{1}]'.format(proxy_name, proxy['name']))
                 print('     \33[36;1m【{0}\033[0m \33[35;1m{1}\033[0m 协议节点】'.format(proxy_name, proxy_protocol))
                 share_links.append(clash2v2ray(proxy))
             print('\33[31;1m获取的节点数量为:{0}'.format(note_count))
