@@ -898,11 +898,6 @@
       },
      {
         "action": "route",
-        "rule_set": "📲 Telegram-Custome",
-        "outbound": "📲 Telegram"
-      },
-     {
-        "action": "route",
         "rule_set": "☺ Facebook",
         "outbound": "☺ Facebook"
       },
@@ -938,6 +933,11 @@
       },
      {
         "action": "route",
+        "rule_set": "GeoLocation-!CN",
+        "outbound": "♻️ 自动选择"
+      },
+     {
+        "action": "route",
         "rule_set": "🇨🇳 ChinaIPs",
         "outbound": "🎯 全球直连"
       },
@@ -955,11 +955,6 @@
         "action": "route",
         "rule_set": "🇨🇳 GeoIP-CN",
         "outbound": "🎯 全球直连"
-      },
-     {
-        "action": "route",
-        "rule_set": "GeoLocation-!CN",
-        "outbound": "♻️ 自动选择"
       }
     ],
     "rule_set": [
@@ -1181,13 +1176,6 @@
         "download_detour": "♻️ 自动选择"
       },
      {
-        "tag": "📲 Telegram-Custome",
-        "type": "remote",
-        "url": "https://raw.githubusercontent.com/Parantric/singbox_ruleset/refs/heads/main/rule/Customize/Proxy/Telegram/Telegram.srs",
-        "format": "binary",
-        "download_detour": "♻️ 自动选择"
-      },
-     {
         "tag": "📡 Global：Proxy",
         "type": "remote",
         "url": "https://raw.githubusercontent.com/senshinya/singbox_ruleset/main/rule/Proxy/Proxy.srs",
@@ -1364,13 +1352,19 @@
       }
     ],
     "default_domain_resolver": {
-      "server": "dns-resolver-aliyun"
+      "server": "dns-aliyun"
     },
     "auto_detect_interface": true,
     "final": "🐟 漏网之鱼"
   },
   "dns": {
     "servers": [
+     {
+        "tag": "dns-aliyun",
+        "type": "https",
+        "server": "dns.alidns.com",
+        "domain_resolver": "dns-resolver-aliyun"
+      },
      {
         "type": "udp",
         "tag": "dns-resolver-aliyun",
@@ -1386,12 +1380,6 @@
         "tag": "dns-resolver-tencent",
         "type": "udp",
         "server": "119.29.29.29"
-      },
-     {
-        "tag": "dns-aliyun",
-        "type": "https",
-        "server": "dns.alidns.com",
-        "domain_resolver": "dns-resolver-aliyun"
       },
      {
         "type": "https",
