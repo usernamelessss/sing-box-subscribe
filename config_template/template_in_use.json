@@ -529,7 +529,7 @@
         "{all}"
       ],
       "filter":[
-       {"action":"include","keywords":["(?i:\bUS[A]?\b|America|United.*?States|美国|[^-]美|波特兰|达拉斯|俄勒冈|凤凰城|费利蒙|硅谷|拉斯维加斯|洛杉矶|圣何塞|圣克拉拉|西雅图|芝加哥)|(?i:\bAU[S]?\b|Australia|Sydney|澳大利亚|澳洲|悉尼)|(?i:\bJP[N]?\b|Japan|Tokyo|Osaka|Saitama|日本|东京|大阪|埼玉|[^-]日)|(?i:\bTW[N]?\b|Taiwan|新北|彰化|\bCHT\b|台湾|[^-]台|\bHINET\b)|(?i:\bNL[D]?\b|Netherlands|荷兰|阿姆斯特丹)|(?i:\bUK\b|\bGB[R]?\b|England|United.*?Kingdom|London|英国|[^-]英|伦敦)|(?i:\bDE[U]?\b|Germany|法兰克福|德(国|意志)|中德|^德$)|(Italy|Milan|意大利|米兰)|(?i:\bFR[A]?\b|France|Paris|法国|巴黎)|(Indonesia|Jakarta|印尼|印度尼西亚|雅加达)|(?i:\bIN[D]?\b|India|Mumbai|印度|孟买|加尔各答|贾坎德|泰米尔纳德)|(Thailand|泰国|曼谷)|(Malaysia|马来|MY)|(Argentina|阿根廷)|(Turkey|土耳其|伊斯坦布尔)|(?i:\bIS[L]?\b|Iceland|冰岛)"]}
+       {"action":"include","keywords":["(?i:\\bUS[A]?\\b|America|United.*?States|美国|[^-]美|波特兰|达拉斯|俄勒冈|凤凰城|费利蒙|硅谷|拉斯维加斯|洛杉矶|圣何塞|圣克拉拉|西雅图|芝加哥)|(?i:\\bAU[S]?\\b|Australia|Sydney|澳大利亚|澳洲|悉尼)|(?i:\\bJP[N]?\\b|Japan|Tokyo|Osaka|Saitama|日本|东京|大阪|埼玉|[^-]日)|(?i:\\bTW[N]?\\b|Taiwan|新北|彰化|\\bCHT\\b|台湾|[^-]台|\\bHINET\\b)|(?i:\\bNL[D]?\\b|Netherlands|荷兰|阿姆斯特丹)|(?i:\\bUK\\b|\\bGB[R]?\\b|England|United.*?Kingdom|London|英国|[^-]英|伦敦)|(?i:\\bDE[U]?\\b|Germany|法兰克福|德(国|意志)|中德|^德$)|(Italy|Milan|意大利|米兰)|(?i:\\bFR[A]?\\b|France|Paris|法国|巴黎)|(Indonesia|Jakarta|印尼|印度尼西亚|雅加达)|(?i:\\bIN[D]?\\b|India|Mumbai|印度|孟买|加尔各答|贾坎德|泰米尔纳德)|(Thailand|泰国|曼谷)|(Malaysia|马来|MY)|(Argentina|阿根廷)|(Turkey|土耳其|伊斯坦布尔)|(?i:\\bIS[L]?\\b|Iceland|冰岛)"]}
       ]
     },
    {
