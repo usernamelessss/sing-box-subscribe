@@ -1710,7 +1710,7 @@
          {
             "tag": "dns-aliyun",
             "type": "https",
-            "server": "223.5.5.5",
+            "server": "dns.alidns.com",
             "domain_resolver": "dns-resolver-aliyun"
          },
          {
@@ -1721,7 +1721,7 @@
          {
             "tag": "dns-tencent",
             "type": "https",
-            "server": "120.53.53.53",
+            "server": "doh.pub",
             "domain_resolver": "dns-resolver-tencent"
          },
          {
@@ -1732,7 +1732,7 @@
          {
             "type": "https",
             "tag": "dns-Quad9",
-            "server": "9.9.9.9",
+            "server": "dns.quad9.net",
             "domain_resolver": "dns-resolver-Quad9",
             "detour": "♻️ 自动选择"
          },
@@ -1745,7 +1745,7 @@
          {
             "type": "https",
             "tag": "dns-google",
-            "server": "8.8.8.8",
+            "server": "dns.google",
             "domain_resolver": "dns-resolver-google",
             "detour": "♻️ 自动选择"
          },
