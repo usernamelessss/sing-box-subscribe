@@ -74,28 +74,28 @@ def process_subscribes(subscribes):
 
 
 def nodes_filter(nodes, filter, group):
-    for a in filter:
-        if a.get('for') and group not in a['for']:
-            continue
-        nodes = action_keywords(nodes, a['action'], a['keywords'])
-    return nodes
+	for a in filter:
+		if a.get('for') and group not in a['for']:
+			continue
+		nodes = action_keywords(nodes, a['action'], a['keywords'])
+	return nodes
 
 
 def action_keywords(nodes, action, keywords):
-    # filter将按顺序依次执行
-    # "filter":[
-    #         {"action":"include","keywords":[""]},
-    #         {"action":"exclude","keywords":[""]}
-    #     ]
-    temp_nodes = []
-    flag = False
-    if action == 'exclude':
-        flag = True
-    '''
-    # 空关键字过滤
-    '''
-    # Join the patterns list into a single pattern, separated by '|'
-    combined_pattern = '|'.join(keywords)
+	# filter将按顺序依次执行
+	# "filter":[
+	#		 {"action":"include","keywords":[""]},
+	#		 {"action":"exclude","keywords":[""]}
+	#	 ]
+	temp_nodes = []
+	flag = False
+	if action == 'exclude':
+		flag = True
+	'''
+	# 空关键字过滤
+	'''
+	# Join the patterns list into a single pattern, separated by '|'
+	combined_pattern = '|'.join(keywords)
 
 	# If the combined pattern is empty or only contains whitespace, return the original nodes
 	if not combined_pattern or combined_pattern.isspace():
@@ -186,7 +186,7 @@ def get_nodes(url):
 				# 	if node_region_msg.city is not None:
 				# 		proxy['name'] = f"{proxy['name']} {node_region_msg.city}"
 				# 	print('\033[31m==> 处理不规则节点:[{0}]=>[{1}]'.format(proxy_name, proxy['name']))
-				print('     \33[36;1m【{0}\033[0m \33[35;1m{1}\033[0m 协议节点】'.format(proxy_name, proxy_protocol))
+				print('	 \33[36;1m【{0}\033[0m \33[35;1m{1}\033[0m 协议节点】'.format(proxy_name, proxy_protocol))
 				share_links.append(clash2v2ray(proxy))
 			print('\33[31;1m获取的节点数量为:{0}'.format(note_count))
 			data = '\n'.join(share_links)
@@ -220,7 +220,7 @@ def parse_content(content):
 	# firstline = tool.firstLine(content)
 	# # print(firstline)
 	# if not get_parser(firstline):
-	#     return None
+	#	 return None
 	nodelist = []
 	for t in content.splitlines():
 		t = t.strip()
@@ -388,9 +388,9 @@ def save_config(path, nodes):
 
 def set_proxy_rule_dns(config):
 	# dns_template = {
-	#     "tag": "remote",
-	#     "address": "tls://1.1.1.1",
-	#     "detour": ""
+	#	 "tag": "remote",
+	#	 "address": "tls://1.1.1.1",
+	#	 "detour": ""
 	# }
 	config_rules = config['route']['rules']
 	outbound_dns = []
@@ -452,7 +452,7 @@ def pro_dns_from_route_rules(route_rule):
 def pro_node_template(data_nodes, config_outbound, group):
 	# 如果 outbound 出站属性中带有 filter ,即:自定义过滤标签
 	if config_outbound.get('filter'):
-		data_nodes = nodes_filter(data_nodes, config_outbound, group)
+		data_nodes = nodes_filter(data_nodes, config_outbound['filter'], group)
 	return [node.get('tag') for node in data_nodes]
 
 
@@ -484,8 +484,8 @@ def combin_to_config(config, data):
 							out["outbounds"].append('{' + group + '}')
 	temp_outbounds = []
 	if config_outbounds:
-        # 获取 "type": "direct"的"tag"值
-        direct_item = next((item for item in config_outbounds if item.get('type') == 'direct'), None)
+		# 获取 "type": "direct"的"tag"值
+		direct_item = next((item for item in config_outbounds if item.get('type') == 'direct'), None)
 		# 提前处理all模板
 		for po in config_outbounds:
 			# 处理出站
@@ -522,7 +522,7 @@ def combin_to_config(config, data):
 					else:
 						t_o.append(oo)
 				if len(t_o) == 0:
-                    t_o.append('Proxy')
+					t_o.append('Proxy')
 					print('发现 {} 出站下的节点数量为 0 ，会导致sing-box无法运行，请检查config模板是否正确。'.format(
 						po['tag']))
 					# print('Sing-Box không chạy được vì không tìm thấy bất kỳ proxy nào trong outbound của {}. Vui lòng kiểm tra xem mẫu cấu hình có đúng không!!'.format(po['tag']))
@@ -615,10 +615,10 @@ if __name__ == '__main__':
 	parser = argparse.ArgumentParser()
 	parser.add_argument('--temp_json_data', type=parse_json, help='临时内容')
 	parser.add_argument('--template_index', type=int, help='模板序号')
-    parser.add_argument('--gh_proxy_index', type=str, help='github加速链接')
+	parser.add_argument('--gh_proxy_index', type=str, help='github加速链接')
 	args = parser.parse_args()
 	temp_json_data = args.temp_json_data
-    gh_proxy_index = args.gh_proxy_index
+	gh_proxy_index = args.gh_proxy_index
 	if temp_json_data and temp_json_data != '{}':
 		providers = json.loads(temp_json_data)
 	else:
@@ -651,15 +651,14 @@ if __name__ == '__main__':
 		config = load_json(config_template_path)
 	nodes = process_subscribes(providers["subscribes"])
 
-    # 处理github加速
-    if hasattr(args, 'gh_proxy_index') and str(args.gh_proxy_index).isdigit():
-        gh_proxy_index = int(args.gh_proxy_index)
-        print(gh_proxy_index)
-        urls = [item["url"] for item in config["route"]["rule_set"]]
-        new_urls = set_gh_proxy(urls, gh_proxy_index)
-        for item, new_url in zip(config["route"]["rule_set"], new_urls):
-            item["url"] = new_url
-
+	# 处理github加速
+	if hasattr(args, 'gh_proxy_index') and str(args.gh_proxy_index).isdigit():
+		gh_proxy_index = int(args.gh_proxy_index)
+		print(gh_proxy_index)
+		urls = [item["url"] for item in config["route"]["rule_set"]]
+		new_urls = set_gh_proxy(urls, gh_proxy_index)
+		for item, new_url in zip(config["route"]["rule_set"], new_urls):
+			item["url"] = new_url
 
 	if providers.get('Only-nodes'):
 		combined_contents = []
