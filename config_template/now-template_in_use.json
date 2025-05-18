@@ -765,7 +765,7 @@
          },
          {
             "action": "reject",
-            "rule_set": "📵 Reject-Proccess"
+            "rule_set": "📵 Reject-Custom"
          },
          {
             "action": "reject",
@@ -1319,9 +1319,9 @@
             "download_detour": "♻️ 自动选择"
          },
          {
-            "tag": "📵 Reject-Proccess",
+            "tag": "📵 Reject-Custom",
             "type": "remote",
-            "url": "https://raw.githubusercontent.com/Parantric/singbox_ruleset/refs/heads/main/rule/Customize/Reject/Process.srs",
+            "url": "https://raw.githubusercontent.com/Parantric/singbox_ruleset/refs/heads/main/rule/Customize/Reject/Reject.srs",
             "format": "binary",
             "download_detour": "♻️ 自动选择"
          },

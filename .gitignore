@@ -15,6 +15,7 @@ venv.bak/
 # Designate Fils.
 providers_now.json
 config.json
+singbox_init.ps1
 
 # Designate Directory.
 .idea/
