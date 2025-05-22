@@ -1,6 +1,7 @@
 import base64, requests, random, string, re, chardet
 import warnings
-
+import geoip2.database
+import socket
 import whois
 from cryptography.utils import CryptographyDeprecationWarning
 
@@ -384,52 +385,11 @@ class ConfigSSH:
 
 
 def get_node_region_by_domain(domain):
-	try:
-		domain = domain.split("//")[-1].split("/")[0]
-		'''
-		 {
-		  "domain_name": "FC-SMARTGLOBAL.XYZ",
-		  "registrar": "NAMECHEAP INC",
-		  "registrar_url": [
-			"https://namecheap.com",
-			"http://www.namecheap.com"
-		  ],
-		  "reseller": "NAMECHEAP INC",
-		  "whois_server": "whois.namecheap.com",
-		  "referral_url": null,
-		  "updated_date": [
-			"2025-03-03 12:14:19",
-			"2025-02-03 07:08:48.790000"
-		  ],
-		  "creation_date": "2024-03-05 03:46:26",
-		  "expiration_date": "2026-03-05 23:59:59",
-		  "name_servers": [
-			"NS1.HUAWEICLOUD-DNS.ORG",
-			"NS1.HUAWEICLOUD-DNS.NET",
-			"NS1.HUAWEICLOUD-DNS.CN",
-			"NS1.HUAWEICLOUD-DNS.COM"
-		  ],
-		  "status": "clientTransferProhibited https://icann.org/epp#clientTransferProhibited",
-		  "emails": [
-			"abuse@namecheap.com",
-			"b3ee1aa185ef4ab6b3320f9cc6166e1b.protect@withheldforprivacy.com"
-		  ],
-		  "dnssec": "unsigned",
-		  "name": "Redacted for Privacy",
-		  "org": "Privacy service provided by Withheld for Privacy ehf",
-		  "address": "Kalkofnsvegur 2",
-		  "city": "Reykjavik",
-		  "state": "Capital Region",
-		  "registrant_postal_code": "101",
-		  "country": "IS"
-		}        
-	'''
-		w = whois.whois(domain)
-		if w and hasattr(w, 'country'):
-			return w
-		else:
-			return "国家信息未找到"
-	except whois.parser.PywhoisError:
-		return "域名未注册或 WHOIS 查询失败"
-	except Exception as e:
-		return f"发生错误: {e}"
+	ip_address = socket.gethostbyname(domain)
+	with geoip2.database.Reader(r'E:\SingBoxCore\sub_convert_home\sing-box-subscribe\getlitedatabase\GeoLite2-Country.mmdb') as reader:
+	# reader = geoip2.database.Reader(r'E:\SingBoxCore\sub_convert_home\sing-box-subscribe\getlitedatabase\GeoLite2-Country.mmdb')
+		response = reader.country(ip_address)
+		# city_name = response.city.name
+		country_name = response.country.name
+		print(f"国家：{country_name}")
+	return country_name

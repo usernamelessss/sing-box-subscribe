@@ -20,3 +20,4 @@ singbox_init.ps1
 # Designate Directory.
 .idea/
 test/
+getlitedatabase/

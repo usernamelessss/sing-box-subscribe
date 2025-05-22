@@ -175,16 +175,15 @@ def get_nodes(url):
 			# 遍历代理信息
 			note_count = 0
 			for proxy in content['proxies']:
-				time.sleep(0.001)
-				note_count += 1
+				# time.sleep(0.001)
 				proxy_name = proxy['name']
 				proxy_protocol = proxy['type']
 				proxy_domain = proxy['server']
-				# if '官网' in proxy_name or '备用' in proxy_name or '连不上' in proxy_name or '有问题' in proxy_name or '客服' in proxy_name or '推荐' in proxy_name:
+				if '官网' in proxy_name or '备用' in proxy_name or '连不上' in proxy_name or '有问题' in proxy_name or '客服' in proxy_name or '推荐' in proxy_name:
+					continue
+				note_count += 1
 				# 	node_region_msg = tool.get_node_region_by_domain(proxy_domain)
-				# 	proxy['name'] = f"♥️ 推荐 {node_region_msg.country} 0{str(note_count)}"
-				# 	if node_region_msg.city is not None:
-				# 		proxy['name'] = f"{proxy['name']} {node_region_msg.city}"
+				# 	proxy['name'] = f"♥️ 推荐 {node_region_msg} 0{str(note_count)}"
 				# 	print('\033[31m==> 处理不规则节点:[{0}]=>[{1}]'.format(proxy_name, proxy['name']))
 				print('	 \33[36;1m【{0}\033[0m \33[35;1m{1}\033[0m 协议节点】'.format(proxy_name, proxy_protocol))
 				share_links.append(clash2v2ray(proxy))

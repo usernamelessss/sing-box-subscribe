@@ -795,6 +795,11 @@
          },
          {
             "action": "route",
+            "rule_set": "☁️ PikPak_Custome",
+            "outbound": "🧳 PikPak"
+         },
+         {
+            "action": "route",
             "rule_set": "🇨🇳 Direct_No_IP",
             "outbound": "🎯 全球直连"
          },
@@ -1301,6 +1306,13 @@
             "tag": "☁️ PikPak_No_IP",
             "type": "remote",
             "url": "https://raw.githubusercontent.com/usernamelessss/singbox_ruleset_use/refs/heads/main/rule/PikPak/PikPak_No_IP.srs",
+            "format": "binary",
+            "download_detour": "♻️ 自动选择"
+         },
+         {
+            "tag": "☁️ PikPak_Custome",
+            "type": "remote",
+            "url": "https://raw.githubusercontent.com/usernamelessss/singbox_ruleset/refs/heads/main/rule/Customize/Proxy/Pikpak/Pikpak.srs",
             "format": "binary",
             "download_detour": "♻️ 自动选择"
          },
