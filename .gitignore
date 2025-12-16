@@ -16,6 +16,7 @@ venv.bak/
 providers_now.json
 config.json
 singbox_init.ps1
+sub_urls.txt
 
 # Designate Directory.
 .idea/

@@ -463,6 +463,7 @@ def combin_to_config(config, data):
 			i += 1
 			for out in config_outbounds:
 				if out.get("outbounds"):
+					# 设置默认的分组标识
 					if out['tag'] == 'Proxy':
 						out["outbounds"] = [out["outbounds"]] if isinstance(out["outbounds"], str) else out["outbounds"]
 						if '{all}' in out["outbounds"]:
@@ -521,10 +522,10 @@ def combin_to_config(config, data):
 					else:
 						t_o.append(oo)
 				if len(t_o) == 0:
-					t_o.append('Proxy')
-					print('发现 {} 出站下的节点数量为 0 ，会导致sing-box无法运行，请检查config模板是否正确。'.format(
+					# 如果为空分组策咯,那么就为其设置一个默认的节点;
+					t_o.append('🚀 节点选择')
+					print('发现 【{}】 出站下的节点数量为 0 ，将为该分组设置一个通用成员【🚀 节点选择】,防止 sing-box 无法运行，请检查 config 模板是否正确...'.format(
 						po['tag']))
-					# print('Sing-Box không chạy được vì không tìm thấy bất kỳ proxy nào trong outbound của {}. Vui lòng kiểm tra xem mẫu cấu hình có đúng không!!'.format(po['tag']))
 					"""
 					config_path = json.loads(temp_json_data).get("save_config_path", "config.json")
 					CONFIG_FILE_NAME = config_path
@@ -624,7 +625,7 @@ if __name__ == '__main__':
 		# providers = load_json('providers.json')  # 加载本地 providers.json
 		providers = load_json('providers_now.json')  # 加载本地 providers.json
 	# 配置中获取模板参数
-	local_template_config = providers.get('local_config_template')
+	config_template_auto = providers.get('config_template_auto')
 	remote_template_config = providers.get('config_template')
 	if remote_template_config:
 		config_template_path = providers['config_template']
@@ -632,10 +633,10 @@ if __name__ == '__main__':
 		response = requests.get(providers['config_template'])
 		response.raise_for_status()
 		config = response.json()
-	elif local_template_config:
-		comment = providers['local_config_template_comment']
+	elif config_template_auto:
+		comment = providers['config_template_auto']
 		print('\033[32;1m{0}'.format(comment))
-		config = load_json(local_template_config)
+		config = load_json(config_template_auto)
 	else:
 		template_list = get_template()
 		if len(template_list) < 1:
@@ -649,7 +650,10 @@ if __name__ == '__main__':
 		# print ('Mẫu cấu hình sử dụng: \033[33m' + template_list[uip] + '.json\033[0m')
 		config = load_json(config_template_path)
 	nodes = process_subscribes(providers["subscribes"])
-
+	# nodes_ = nodes['Custome']
+	# for node in nodes_:
+	# 		node.pop('domain_resolver')
+	# 		print("删除成功!")
 	# 处理github加速
 	if hasattr(args, 'gh_proxy_index') and str(args.gh_proxy_index).isdigit():
 		gh_proxy_index = int(args.gh_proxy_index)

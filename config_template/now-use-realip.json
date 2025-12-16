@@ -1,15 +1,15 @@
 {
    "log": {
       "disabled": false,
-      "level": "trace",
-      "output": "singbox_trace.log",
+      "level": "debug",
+      "output": "singbox_debug.log",
       "timestamp": true
    },
    "experimental": {
       "clash_api": {
-         "external_controller": "0.0.0.0:9090",
-         "external_ui": "",
-         "external_ui_download_url": "https://github.com/MetaCubeX/Yacd-meta/archive/gh-pages.zip",
+         "external_controller": "127.0.0.1:9090",
+         "external_ui": "ui",
+         "external_ui_download_url": "https://github.com/Zephyruso/zashboard/releases/latest/download/dist.zip",
          "external_ui_download_detour": "♻️ 自动选择",
          "default_mode": "rule",
          "access_control_allow_origin": [
@@ -29,7 +29,7 @@
    "inbounds": [
       {
          "type": "tun",
-         "tag": "🔀 TUN-SingBox-Core",
+         "tag": "🌀 TUN",
          "interface_name": "",
          "address": [
             "172.18.0.1/30"
@@ -45,7 +45,7 @@
       },
       {
          "type": "mixed",
-         "tag": "Ⓜ Mixed-SingBox-Core",
+         "tag": "Ⓜ️ Mixed",
          "listen": "127.0.0.1",
          "listen_port": 20122,
          "tcp_fast_open": true,
@@ -84,6 +84,61 @@
          "tag": "🍊 Google",
          "interrupt_exist_connections": false,
          "outbounds": [
+            "🚀 节点选择",
+            "♻️ 自动选择",
+            "🇺🇲 美国节点",
+            "🇭🇰 香港节点",
+            "🇹🇼 台湾节点",
+            "🇯🇵 日本节点",
+            "🇸🇬 狮城节点",
+            "🇰🇷 韩国节点",
+            "🌏 亚洲",
+            "🇪🇺 欧洲",
+            "🇦🇺 澳洲"
+         ]
+      },
+      {
+         "type": "selector",
+         "tag": "🎮 Steam",
+         "interrupt_exist_connections": false,
+         "outbounds": [
+            "🚀 节点选择",
+            "♻️ 自动选择",
+            "🇺🇲 美国节点",
+            "🇭🇰 香港节点",
+            "🇹🇼 台湾节点",
+            "🇯🇵 日本节点",
+            "🇸🇬 狮城节点",
+            "🇰🇷 韩国节点",
+            "🌏 亚洲",
+            "🇪🇺 欧洲",
+            "🇦🇺 澳洲"
+         ]
+      },
+      {
+         "type": "selector",
+         "tag": "🎮 台服游戏",
+         "interrupt_exist_connections": false,
+         "outbounds": [
+            "🇭🇰 香港节点",
+            "🇹🇼 台湾节点",
+            "🚀 节点选择",
+            "♻️ 自动选择",
+            "🇺🇲 美国节点",
+            "🇯🇵 日本节点",
+            "🇸🇬 狮城节点",
+            "🇰🇷 韩国节点",
+            "🌏 亚洲",
+            "🇪🇺 欧洲",
+            "🇦🇺 澳洲"
+         ]
+      },
+      {
+         "type": "selector",
+         "tag": "🎮 SteamCN",
+         "interrupt_exist_connections": false,
+         "outbounds": [
+            "🎯 全球直连",
             "🚀 节点选择",
             "♻️ 自动选择",
             "🇺🇲 美国节点",
@@ -157,10 +212,10 @@
          "tag": "🎬 YouTube",
          "interrupt_exist_connections": false,
          "outbounds": [
+            "🇭🇰 香港节点",
             "🚀 节点选择",
             "♻️ 自动选择",
             "🇺🇲 美国节点",
-            "🇭🇰 香港节点",
             "🇹🇼 台湾节点",
             "🇯🇵 日本节点",
             "🇸🇬 狮城节点",
@@ -193,10 +248,10 @@
          "tag": "📲 Telegram",
          "interrupt_exist_connections": false,
          "outbounds": [
-            "🚀 节点选择",
-            "♻️ 自动选择",
-            "🇺🇲 美国节点",
             "🇭🇰 香港节点",
+            "♻️ 自动选择",
+            "🚀 节点选择",
+            "🇺🇲 美国节点",
             "🇹🇼 台湾节点",
             "🇯🇵 日本节点",
             "🇸🇬 狮城节点",
@@ -727,6 +782,7 @@
          "tag": "GLOBAL",
          "interrupt_exist_connections": false,
          "outbounds": [
+            "🇭🇰 香港节点",
             "♻️ 自动选择",
             "🚀 节点选择",
             "🎯 全球直连",
@@ -737,8 +793,13 @@
    "route": {
       "rules": [
          {
+            "action": "resolve",
+            "inbound": "🌀 TUN",
+            "strategy": "ipv4_only"
+         },
+         {
             "action": "sniff",
-            "inbound": "🔀 TUN-SingBox-Core"
+            "inbound": "🌀 TUN"
          },
          {
             "action": "hijack-dns",
@@ -760,7 +821,7 @@
          },
          {
             "action": "reject",
-            "rule_set": "📵 Reject-Proccess"
+            "rule_set": "📵 Reject-Custom"
          },
          {
             "action": "reject",
@@ -780,6 +841,11 @@
          },
          {
             "action": "route",
+            "rule_set": "🎮 台服游戏",
+            "outbound": "🎮 台服游戏"
+         },
+         {
+            "action": "route",
             "rule_set": "🇨🇳 Process Direct",
             "outbound": "🎯 全球直连"
          },
@@ -790,8 +856,18 @@
          },
          {
             "action": "route",
+            "rule_set": "☁️ PikPak_Custome",
+            "outbound": "🧳 PikPak"
+         },
+         {
+            "action": "route",
             "rule_set": "🇨🇳 Direct_No_IP",
             "outbound": "🎯 全球直连"
+         },
+         {
+            "action": "route",
+            "rule_set": "🎮 SteamCN_No_IP",
+            "outbound": "🎮 SteamCN"
          },
          {
             "action": "route",
@@ -980,6 +1056,11 @@
          },
          {
             "action": "route",
+            "rule_set": "🎮 Steam_No_IP",
+            "outbound": "🎮 Steam"
+         },
+         {
+            "action": "route",
             "rule_set": "🦊 Firefox",
             "outbound": "🦊 Firefox"
          },
@@ -1153,6 +1234,20 @@
             "download_detour": "♻️ 自动选择"
          },
          {
+            "tag": "🎮 Steam_No_IP",
+            "type": "remote",
+            "url": "https://raw.githubusercontent.com/usernamelessss/singbox_ruleset_use/refs/heads/main/rule/Steam/Steam_No_IP.srs",
+            "format": "binary",
+            "download_detour": "♻️ 自动选择"
+         },
+         {
+            "tag": "🎮 SteamCN_No_IP",
+            "type": "remote",
+            "url": "https://raw.githubusercontent.com/usernamelessss/singbox_ruleset_use/refs/heads/main/rule/SteamCN/SteamCN_No_IP.srs",
+            "format": "binary",
+            "download_detour": "♻️ 自动选择"
+         },
+         {
             "tag": "😈 Non-China",
             "type": "remote",
             "url": "https://raw.githubusercontent.com/Parantric/singbox_ruleset/refs/heads/main/rule/Customize/Proxy/Non-China/Non-China.srs",
@@ -1198,6 +1293,13 @@
             "tag": "🇨🇳 ChinaMobile_No_IP",
             "type": "remote",
             "url": "https://raw.githubusercontent.com/usernamelessss/singbox_ruleset_use/refs/heads/main/rule/ChinaMobile/ChinaMobile_No_IP.srs",
+            "format": "binary",
+            "download_detour": "♻️ 自动选择"
+         },
+         {
+            "tag": "🎮 台服游戏",
+            "type": "remote",
+            "url": "https://raw.githubusercontent.com/usernamelessss/singbox_ruleset/refs/heads/main/rule/Customize/Proxy/Game/Nexon.srs",
             "format": "binary",
             "download_detour": "♻️ 自动选择"
          },
@@ -1300,6 +1402,13 @@
             "download_detour": "♻️ 自动选择"
          },
          {
+            "tag": "☁️ PikPak_Custome",
+            "type": "remote",
+            "url": "https://raw.githubusercontent.com/usernamelessss/singbox_ruleset/refs/heads/main/rule/Customize/Proxy/Pikpak/Pikpak.srs",
+            "format": "binary",
+            "download_detour": "♻️ 自动选择"
+         },
+         {
             "tag": "🖼 Pixiv_No_IP",
             "type": "remote",
             "url": "https://raw.githubusercontent.com/usernamelessss/singbox_ruleset_use/refs/heads/main/rule/Pixiv/Pixiv_No_IP.srs",
@@ -1314,9 +1423,9 @@
             "download_detour": "♻️ 自动选择"
          },
          {
-            "tag": "📵 Reject-Proccess",
+            "tag": "📵 Reject-Custom",
             "type": "remote",
-            "url": "https://raw.githubusercontent.com/Parantric/singbox_ruleset/refs/heads/main/rule/Customize/Reject/Process.srs",
+            "url": "https://raw.githubusercontent.com/Parantric/singbox_ruleset/refs/heads/main/rule/Customize/Reject/Reject.srs",
             "format": "binary",
             "download_detour": "♻️ 自动选择"
          },
@@ -1815,7 +1924,7 @@
                }
             ],
             "action": "route",
-            "server": "dns-Quad9",
+            "server": "dns-google",
             "client_subnet": "1.0.1.0",
             "strategy": "ipv4_only"
          }
@@ -1823,7 +1932,7 @@
       "disable_cache": false,
       "disable_expire": false,
       "independent_cache": false,
-      "final": "dns-Quad9",
+      "final": "dns-google",
       "strategy": "ipv4_only"
    }
 }
