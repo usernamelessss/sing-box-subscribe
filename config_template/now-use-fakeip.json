@@ -1,4 +1,156 @@
 {
+    "dns":
+    {
+        "disable_cache": false,
+        "disable_expire": false,
+        "final": "quad9",
+        "independent_cache": false,
+        "rules":
+        [
+            {
+                "action": "route",
+                "clash_mode": "direct",
+                "server": "alidns",
+                "strategy": "ipv4_only"
+            },
+            {
+                "action": "route",
+                "clash_mode": "global",
+                "server": "google",
+                "strategy": "ipv4_only"
+            },
+            {
+                "action": "route",
+                "rule_set": "cn",
+                "server": "alidns",
+                "strategy": "ipv4_only"
+            },
+            {
+                "action": "route",
+                "mode": "and",
+                "rules":
+                [
+                    {
+                        "query_type":
+                        [
+                            "A"
+                        ]
+                    },
+                    {
+                        "invert": false,
+                        "rule_set": "proxy"
+                    },
+                    {
+                        "invert": true,
+                        "rule_set":
+                        [
+                            "fakeip-filter"
+                        ]
+                    }
+                ],
+                "server": "fakeip",
+                "strategy": "ipv4_only",
+                "type": "logical"
+            },
+            {
+                "server": "alidns"
+            }
+        ],
+        "servers":
+        [
+            {
+                "domain_resolver": "resolver-alidns",
+                "server": "dns.alidns.com",
+                "tag": "alidns",
+                "type": "https"
+            },
+            {
+                "server": "223.5.5.5",
+                "tag": "resolver-alidns",
+                "type": "udp"
+            },
+            {
+                "domain_resolver": "resolver-quad9",
+                "server": "dns.quad9.net",
+                "tag": "quad9",
+                "type": "https"
+            },
+            {
+                "server": "9.9.9.9",
+                "tag": "resolver-quad9",
+                "type": "udp"
+            },
+            {
+                "domain_resolver": "resolver-google",
+                "server": "dns.google",
+                "tag": "google",
+                "type": "https"
+            },
+            {
+                "server": "8.8.8.8",
+                "tag": "resolver-google",
+                "type": "udp"
+            },
+            {
+                "inet4_range": "198.18.0.0/15",
+                "tag": "fakeip",
+                "type": "fakeip"
+            }
+        ],
+        "strategy": "ipv4_only"
+    },
+    "experimental":
+    {
+        "cache_file":
+        {
+            "cache_id": "",
+            "enabled": true,
+            "path": "cache.db",
+            "rdrc_timeout": "7d",
+            "store_fakeip": true,
+            "store_rdrc": true
+        },
+        "clash_api":
+        {
+            "access_control_allow_origin":
+            [
+                "*"
+            ],
+            "access_control_allow_private_network": true,
+            "default_mode": "rule",
+            "external_controller": "127.0.0.1:9090",
+            "external_ui": "ui",
+            "external_ui_download_detour": "♻️ 延迟选优",
+            "external_ui_download_url": "https://github.com/Zephyruso/zashboard/releases/latest/download/dist.zip"
+        }
+    },
+    "inbounds":
+    [
+        {
+            "address":
+            [
+                "172.18.0.1/30"
+            ],
+            "auto_route": true,
+            "endpoint_independent_nat": false,
+            "interface_name": "tun-in",
+            "mtu": 1500,
+            "route_exclude_address":
+            [
+                "192.168.0.0/16"
+            ],
+            "stack": "gvisor",
+            "strict_route": true,
+            "tag": "tun-in",
+            "type": "tun"
+        },
+        {
+            "listen": "127.0.0.1",
+            "listen_port": 20122,
+            "tag": "mixed-in",
+            "type": "mixed"
+        }
+    ],
     "log":
     {
         "disabled": false,
@@ -6,69 +158,29 @@
         "output": "singbox_debug.log",
         "timestamp": true
     },
-    "experimental":
-    {
-        "clash_api":
-        {
-            "external_controller": "127.0.0.1:9090",
-            "external_ui": "ui",
-            "external_ui_download_url": "https://github.com/Zephyruso/zashboard/releases/latest/download/dist.zip",
-            "external_ui_download_detour": "♻️ 延迟选优",
-            "default_mode": "rule",
-            "access_control_allow_origin":
-            [
-                "*"
-            ],
-            "access_control_allow_private_network": true
-        },
-        "cache_file":
-        {
-            "enabled": true,
-            "path": "cache.db",
-            "cache_id": "",
-            "store_fakeip": true,
-            "store_rdrc": true,
-            "rdrc_timeout": "7d"
-        }
-    },
-    "inbounds":
-    [
-        {
-            "type": "tun",
-            "tag": "tun-in",
-            "stack": "gvisor",
-            "interface_name": "tun-in",
-            "address":
-            [
-                "172.18.0.1/30"
-            ],
-            "mtu": 1500,
-            "auto_route": true,
-            "strict_route": true,
-            "route_exclude_address":
-            [
-                "192.168.0.0/16"
-            ],
-            "endpoint_independent_nat": false
-        },
-        {
-            "type": "mixed",
-            "tag": "mixed-in",
-            "listen": "127.0.0.1",
-            "listen_port": 20122
-        }
-    ],
     "outbounds":
     [
         {
-            "type": "selector",
-            "tag": "🚀 节点选择",
+            "filter":
+            [
+                {
+                    "action": "exclude",
+                    "keywords":
+                    [
+                        "官方|更新|订阅|套餐|流量|官网|备用|开关|联系|客服|剩余|线路|恢复|机场|客户"
+                    ]
+                }
+            ],
             "interrupt_exist_connections": false,
             "outbounds":
             [
                 "♻️ 延迟选优",
                 "{all}"
             ],
+            "tag": "🚀 节点选择",
+            "type": "selector"
+        },
+        {
             "filter":
             [
                 {
@@ -78,33 +190,19 @@
                         "官方|更新|订阅|套餐|流量|官网|备用|开关|联系|客服|剩余|线路|恢复|机场|客户"
                     ]
                 }
-            ]
-        },
-        {
-            "type": "urltest",
-            "tag": "♻️ 延迟选优",
-            "url": "http://www.gstatic.com/generate_204",
-            "interval": "3m",
-            "tolerance": 50,
+            ],
             "interrupt_exist_connections": false,
+            "interval": "3m",
             "outbounds":
             [
                 "{all}"
             ],
-            "filter":
-            [
-                {
-                    "action": "exclude",
-                    "keywords":
-                    [
-                        "官方|更新|订阅|套餐|流量|官网|备用|开关|联系|客服|剩余|线路|恢复|机场|客户"
-                    ]
-                }
-            ]
+            "tag": "♻️ 延迟选优",
+            "tolerance": 50,
+            "type": "urltest",
+            "url": "http://www.gstatic.com/generate_204"
         },
         {
-            "type": "selector",
-            "tag": "🎞️ 油管视频",
             "interrupt_exist_connections": false,
             "outbounds":
             [
@@ -116,11 +214,11 @@
                 "🇯🇵 日本节点",
                 "🇹🇼 台湾节点",
                 "🇰🇷 韩国节点"
-            ]
+            ],
+            "tag": "🎞️ 油管视频",
+            "type": "selector"
         },
         {
-            "type": "selector",
-            "tag": "🎮 MABINOGI：HEROES",
             "interrupt_exist_connections": false,
             "outbounds":
             [
@@ -133,66 +231,89 @@
                 "🇯🇵 日本节点",
                 "🇹🇼 台湾节点",
                 "🇰🇷 韩国节点"
-            ]
+            ],
+            "tag": "🎮 MABINOGI：HEROES",
+            "type": "selector"
         },
         {
-            "type": "selector",
-            "tag": "🤖 人工智能",
             "interrupt_exist_connections": false,
             "outbounds":
             [
+                "🇯🇵 日本节点",
                 "🇭🇰 香港节点",
                 "🇺🇲 美国节点",
                 "🇸🇬 狮城节点",
-                "🇯🇵 日本节点",
                 "🚀 节点选择",
                 "♻️ 延迟选优",
                 "🇹🇼 台湾节点",
                 "🇰🇷 韩国节点"
-            ]
+            ],
+            "tag": "🤖 人工智能",
+            "type": "selector"
         },
         {
-            "type": "selector",
-            "tag": "📲 电报消息",
             "interrupt_exist_connections": false,
             "outbounds":
             [
+                "🇭🇰 香港节点",
+                "🇯🇵 日本节点",
+                "🇺🇲 美国节点",
+                "🇸🇬 狮城节点",
                 "🚀 节点选择",
                 "♻️ 延迟选优",
+                "🇹🇼 台湾节点",
+                "🇰🇷 韩国节点"
+            ],
+            "tag": "🤖 Grok",
+            "type": "selector"
+        },
+        {
+            "interrupt_exist_connections": false,
+            "outbounds":
+            [
                 "🇭🇰 香港节点",
+                "🇯🇵 日本节点",
+                "🇺🇲 美国节点",
+                "🇸🇬 狮城节点",
+                "🚀 节点选择",
+                "♻️ 延迟选优",
+                "🇹🇼 台湾节点",
+                "🇰🇷 韩国节点"
+            ],
+            "tag": "🤖 Perplexity",
+            "type": "selector"
+        },
+        {
+            "interrupt_exist_connections": false,
+            "outbounds":
+            [
+                "🇭🇰 香港节点",
+                "🚀 节点选择",
+                "♻️ 延迟选优",
                 "🇯🇵 日本节点",
                 "🇺🇲 美国节点",
                 "🇹🇼 台湾节点",
                 "🇰🇷 韩国节点",
                 "🇸🇬 狮城节点"
-            ]
+            ],
+            "tag": "📲 电报消息",
+            "type": "selector"
         },
         {
-            "type": "selector",
-            "tag": "🔒 私有网络",
-            "interrupt_exist_connections": false,
-            "outbounds":
-            [
-                "🎯 全球直连"
-            ]
+            "tag": "🎯 全球直连",
+            "type": "direct"
         },
         {
-            "type": "direct",
-            "tag": "🎯 全球直连"
-        },
-        {
-            "type": "selector",
-            "tag": "🐟 漏网之鱼",
             "interrupt_exist_connections": false,
             "outbounds":
             [
                 "♻️ 延迟选优",
                 "🚀 节点选择"
-            ]
+            ],
+            "tag": "🐟 漏网之鱼",
+            "type": "selector"
         },
         {
-            "type": "selector",
-            "tag": "GLOBAL",
             "interrupt_exist_connections": false,
             "outbounds":
             [
@@ -200,19 +321,11 @@
                 "♻️ 延迟选优",
                 "🎯 全球直连",
                 "🐟 漏网之鱼"
-            ]
+            ],
+            "tag": "GLOBAL",
+            "type": "selector"
         },
         {
-            "type": "urltest",
-            "tag": "🇺🇲 美国节点",
-            "url": "https://www.gstatic.com/generate_204",
-            "interval": "3m",
-            "tolerance": 150,
-            "interrupt_exist_connections": false,
-            "outbounds":
-            [
-                "{all}"
-            ],
             "filter":
             [
                 {
@@ -222,19 +335,19 @@
                         "美|波特兰|达拉斯|俄勒冈|凤凰城|费利蒙|硅谷|拉斯维加斯|洛杉矶|圣何塞|圣克拉拉|西雅图|芝加哥|US|United States"
                     ]
                 }
-            ]
-        },
-        {
-            "type": "urltest",
-            "tag": "🇭🇰 香港节点",
-            "url": "https://www.gstatic.com/generate_204",
-            "interval": "3m",
-            "tolerance": 150,
+            ],
             "interrupt_exist_connections": false,
+            "interval": "3m",
             "outbounds":
             [
                 "{all}"
             ],
+            "tag": "🇺🇲 美国节点",
+            "tolerance": 150,
+            "type": "urltest",
+            "url": "https://www.gstatic.com/generate_204"
+        },
+        {
             "filter":
             [
                 {
@@ -244,19 +357,19 @@
                         "港|HK|Hong Kong"
                     ]
                 }
-            ]
-        },
-        {
-            "type": "urltest",
-            "tag": "🇹🇼 台湾节点",
-            "url": "https://www.gstatic.com/generate_204",
-            "interval": "3m",
-            "tolerance": 150,
+            ],
             "interrupt_exist_connections": false,
+            "interval": "3m",
             "outbounds":
             [
                 "{all}"
             ],
+            "tag": "🇭🇰 香港节点",
+            "tolerance": 150,
+            "type": "urltest",
+            "url": "https://www.gstatic.com/generate_204"
+        },
+        {
             "filter":
             [
                 {
@@ -266,19 +379,19 @@
                         "台|新北|彰化|TW|Taiwan"
                     ]
                 }
-            ]
-        },
-        {
-            "type": "urltest",
-            "tag": "🇯🇵 日本节点",
-            "url": "https://www.gstatic.com/generate_204",
-            "interval": "3m",
-            "tolerance": 150,
+            ],
             "interrupt_exist_connections": false,
+            "interval": "3m",
             "outbounds":
             [
                 "{all}"
             ],
+            "tag": "🇹🇼 台湾节点",
+            "tolerance": 150,
+            "type": "urltest",
+            "url": "https://www.gstatic.com/generate_204"
+        },
+        {
             "filter":
             [
                 {
@@ -288,19 +401,19 @@
                         "日本|川日|东京|大阪|泉日|埼玉|沪日|深日|[^-]日|JP|Japan"
                     ]
                 }
-            ]
-        },
-        {
-            "type": "urltest",
-            "tag": "🇸🇬 狮城节点",
-            "url": "https://www.gstatic.com/generate_204",
-            "interval": "3m",
-            "tolerance": 150,
+            ],
             "interrupt_exist_connections": false,
+            "interval": "3m",
             "outbounds":
             [
                 "{all}"
             ],
+            "tag": "🇯🇵 日本节点",
+            "tolerance": 150,
+            "type": "urltest",
+            "url": "https://www.gstatic.com/generate_204"
+        },
+        {
             "filter":
             [
                 {
@@ -310,19 +423,19 @@
                         "新加坡|坡|狮城|SG|Singapore"
                     ]
                 }
-            ]
-        },
-        {
-            "type": "urltest",
-            "tag": "🇰🇷 韩国节点",
-            "url": "https://www.gstatic.com/generate_204",
-            "interval": "3m",
-            "tolerance": 150,
+            ],
             "interrupt_exist_connections": false,
+            "interval": "3m",
             "outbounds":
             [
                 "{all}"
             ],
+            "tag": "🇸🇬 狮城节点",
+            "tolerance": 150,
+            "type": "urltest",
+            "url": "https://www.gstatic.com/generate_204"
+        },
+        {
             "filter":
             [
                 {
@@ -332,11 +445,226 @@
                         "KR|Korea|KOR|首尔|韩|韓"
                     ]
                 }
-            ]
+            ],
+            "interrupt_exist_connections": false,
+            "interval": "3m",
+            "outbounds":
+            [
+                "{all}"
+            ],
+            "tag": "🇰🇷 韩国节点",
+            "tolerance": 150,
+            "type": "urltest",
+            "url": "https://www.gstatic.com/generate_204"
         }
     ],
     "route":
     {
+        "auto_detect_interface": true,
+        "default_domain_resolver":
+        {
+            "server": "alidns"
+        },
+        "final": "🐟 漏网之鱼",
+        "rule_set":
+        [
+            {
+                "download_detour": "♻️ 延迟选优",
+                "format": "binary",
+                "tag": "PikPak",
+                "type": "remote",
+                "url": "https://raw.githubusercontent.com/usernamelessss/singbox_ruleset_use/refs/heads/main/rule/PikPak/PikPak_No_IP.srs"
+            },
+            {
+                "download_detour": "♻️ 延迟选优",
+                "format": "binary",
+                "tag": "cloudflare-ips",
+                "type": "remote",
+                "url": "https://github.com/you-oops-dev/ipranges-singbox/raw/main/cloudflare/cloudflare.srs"
+            },
+            {
+                "download_detour": "♻️ 延迟选优",
+                "format": "binary",
+                "tag": "Grok",
+                "type": "remote",
+                "url": "https://raw.githubusercontent.com/usernamelessss/singbox_ruleset/refs/heads/main/rule/proxy/grok/grok.srs"
+            },
+            {
+                "download_detour": "♻️ 延迟选优",
+                "format": "binary",
+                "tag": "Perplexity",
+                "type": "remote",
+                "url": "https://raw.githubusercontent.com/usernamelessss/singbox_ruleset/refs/heads/main/rule/proxy/perplexity/perplexity.srs"
+            },
+            {
+                "download_detour": "♻️ 延迟选优",
+                "format": "binary",
+                "tag": "self-tcgame",
+                "type": "remote",
+                "url": "https://raw.githubusercontent.com/usernamelessss/singbox_ruleset/refs/heads/main/rule/self/self-game/self-tcgame.srs"
+            },
+            {
+                "download_detour": "♻️ 延迟选优",
+                "format": "binary",
+                "tag": "self-tiancity",
+                "type": "remote",
+                "url": "https://raw.githubusercontent.com/usernamelessss/singbox_ruleset/refs/heads/main/rule/self/self-game/self-tiancity.srs"
+            },
+            {
+                "download_detour": "♻️ 延迟选优",
+                "format": "binary",
+                "tag": "self-force",
+                "type": "remote",
+                "url": "https://raw.githubusercontent.com/usernamelessss/singbox_ruleset/refs/heads/main/rule/self/self-proxy/Force/Force.srs"
+            },
+            {
+                "download_detour": "♻️ 延迟选优",
+                "format": "binary",
+                "tag": "private",
+                "type": "remote",
+                "url": "https://raw.githubusercontent.com/DustinWin/ruleset_geodata/refs/heads/sing-box-ruleset/private.srs"
+            },
+            {
+                "download_detour": "♻️ 延迟选优",
+                "format": "binary",
+                "tag": "ads",
+                "type": "remote",
+                "url": "https://raw.githubusercontent.com/DustinWin/ruleset_geodata/refs/heads/sing-box-ruleset/ads.srs"
+            },
+            {
+                "download_detour": "♻️ 延迟选优",
+                "format": "binary",
+                "tag": "applications",
+                "type": "remote",
+                "url": "https://raw.githubusercontent.com/DustinWin/ruleset_geodata/refs/heads/sing-box-ruleset/applications.srs"
+            },
+            {
+                "download_detour": "♻️ 延迟选优",
+                "format": "binary",
+                "tag": "self-direct",
+                "type": "remote",
+                "url": "https://raw.githubusercontent.com/usernamelessss/singbox_ruleset/refs/heads/main/rule/self/self-direct/self-direct.srs"
+            },
+            {
+                "download_detour": "♻️ 延迟选优",
+                "format": "binary",
+                "tag": "microsoft-cn",
+                "type": "remote",
+                "url": "https://raw.githubusercontent.com/DustinWin/ruleset_geodata/refs/heads/sing-box-ruleset/microsoft-cn.srs"
+            },
+            {
+                "download_detour": "♻️ 延迟选优",
+                "format": "binary",
+                "tag": "google-cn",
+                "type": "remote",
+                "url": "https://raw.githubusercontent.com/DustinWin/ruleset_geodata/refs/heads/sing-box-ruleset/google-cn.srs"
+            },
+            {
+                "download_detour": "♻️ 延迟选优",
+                "format": "binary",
+                "tag": "max",
+                "type": "remote",
+                "url": "https://raw.githubusercontent.com/DustinWin/ruleset_geodata/refs/heads/sing-box-ruleset/max.srs"
+            },
+            {
+                "download_detour": "♻️ 延迟选优",
+                "format": "binary",
+                "tag": "youtube",
+                "type": "remote",
+                "url": "https://raw.githubusercontent.com/DustinWin/ruleset_geodata/refs/heads/sing-box-ruleset/youtube.srs"
+            },
+            {
+                "download_detour": "♻️ 延迟选优",
+                "format": "binary",
+                "tag": "direct-app-self",
+                "type": "remote",
+                "url": "https://raw.githubusercontent.com/usernamelessss/singbox_ruleset/refs/heads/main/rule/self/self-direct/self-process.srs"
+            },
+            {
+                "download_detour": "♻️ 延迟选优",
+                "format": "binary",
+                "tag": "bilibili",
+                "type": "remote",
+                "url": "https://raw.githubusercontent.com/DustinWin/ruleset_geodata/refs/heads/sing-box-ruleset/bilibili.srs"
+            },
+            {
+                "download_detour": "♻️ 延迟选优",
+                "format": "binary",
+                "tag": "media",
+                "type": "remote",
+                "url": "https://raw.githubusercontent.com/DustinWin/ruleset_geodata/refs/heads/sing-box-ruleset/media.srs"
+            },
+            {
+                "download_detour": "♻️ 延迟选优",
+                "format": "binary",
+                "tag": "ai",
+                "type": "remote",
+                "url": "https://raw.githubusercontent.com/DustinWin/ruleset_geodata/refs/heads/sing-box-ruleset/ai.srs"
+            },
+            {
+                "download_detour": "♻️ 延迟选优",
+                "format": "binary",
+                "tag": "tld-proxy",
+                "type": "remote",
+                "url": "https://raw.githubusercontent.com/DustinWin/ruleset_geodata/refs/heads/sing-box-ruleset/tld-proxy.srs"
+            },
+            {
+                "download_detour": "♻️ 延迟选优",
+                "format": "binary",
+                "tag": "cn",
+                "type": "remote",
+                "url": "https://raw.githubusercontent.com/DustinWin/ruleset_geodata/refs/heads/sing-box-ruleset/cn.srs"
+            },
+            {
+                "download_detour": "♻️ 延迟选优",
+                "format": "binary",
+                "tag": "privateip",
+                "type": "remote",
+                "url": "https://raw.githubusercontent.com/DustinWin/ruleset_geodata/refs/heads/sing-box-ruleset/privateip.srs"
+            },
+            {
+                "download_detour": "♻️ 延迟选优",
+                "format": "binary",
+                "tag": "cnip",
+                "type": "remote",
+                "url": "https://raw.githubusercontent.com/DustinWin/ruleset_geodata/refs/heads/sing-box-ruleset/cnip.srs"
+            },
+            {
+                "download_detour": "♻️ 延迟选优",
+                "format": "binary",
+                "tag": "telegramip",
+                "type": "remote",
+                "url": "https://raw.githubusercontent.com/DustinWin/ruleset_geodata/refs/heads/sing-box-ruleset/telegramip.srs"
+            },
+            {
+                "download_detour": "♻️ 延迟选优",
+                "format": "binary",
+                "tag": "mediaip",
+                "type": "remote",
+                "url": "https://raw.githubusercontent.com/DustinWin/ruleset_geodata/refs/heads/sing-box-ruleset/mediaip.srs"
+            },
+            {
+                "download_detour": "♻️ 延迟选优",
+                "format": "binary",
+                "tag": "self-reject",
+                "type": "remote",
+                "url": "https://raw.githubusercontent.com/usernamelessss/singbox_ruleset/refs/heads/main/rule/self/self-reject/self-reject.srs"
+            },
+            {
+                "download_detour": "♻️ 延迟选优",
+                "format": "binary",
+                "tag": "fakeip-filter",
+                "type": "remote",
+                "url": "https://raw.githubusercontent.com/DustinWin/ruleset_geodata/refs/heads/sing-box-ruleset/fakeip-filter.srs"
+            },
+            {
+                "download_detour": "♻️ 延迟选优",
+                "format": "binary",
+                "tag": "proxy",
+                "type": "remote",
+                "url": "https://raw.githubusercontent.com/DustinWin/ruleset_geodata/refs/heads/sing-box-ruleset/proxy.srs"
+            }
+        ],
         "rules":
         [
             {
@@ -346,6 +674,47 @@
             {
                 "action": "hijack-dns",
                 "protocol": "dns"
+            },
+            {
+                "action": "route",
+                "outbound": "🎯 全球直连",
+                "rule_set": "private"
+            },
+            {
+                "ip_cidr":
+                [
+                    "127.0.0.1/8",
+                    "10.0.0.0/8",
+                    "172.16.0.0/12",
+                    "192.168.0.0/16"
+                ],
+                "outbound": "🎯 全球直连"
+            },
+            {
+                "action": "route",
+                "outbound": "🎯 全球直连",
+                "rule_set": "privateip"
+            },
+            {
+                "outbound": "🎯 全球直连",
+                "process_path":
+                [
+                    "E:/SingBoxCore/sing-box.exe"
+                ],
+                "protocol": "dns"
+            },
+            {
+                "outbound": "🎯 全球直连",
+                "port":
+                [
+                    53,
+                    443,
+                    853
+                ],
+                "process_path":
+                [
+                    "E:/SingBoxCore/sing-box.exe"
+                ]
             },
             {
                 "action": "route",
@@ -359,411 +728,134 @@
             },
             {
                 "action": "reject",
-                "protocol": "quic"
+                "rule_set": "ads"
             },
             {
                 "action": "reject",
                 "rule_set": "self-reject"
             },
             {
-                "action": "route",
-                "rule_set": "private",
-                "outbound": "🔒 私有网络"
-            },
-            {
-                "action": "route",
-                "rule_set": "self-force",
-                "outbound": "♻️ 延迟选优"
-            },
-            {
-                "action": "route",
-                "rule_set": "self-direct",
-                "outbound": "🎯 全球直连"
-            },
-            {
-                "action": "route",
-                "rule_set": "self-tiancity",
-                "outbound": "🎮 MABINOGI：HEROES"
-            },
-            {
-                "action": "route",
-                "rule_set": "self-tcgame",
-                "outbound": "🎯 全球直连"
-            },
-            {
-                "action": "route",
-                "rule_set": "direct-app-self",
-                "outbound": "🎯 全球直连"
-            },
-            {
-                "action": "route",
-                "rule_set": "applications",
-                "outbound": "🎯 全球直连"
-            },
-            {
-                "action": "route",
-                "rule_set": "microsoft-cn",
-                "outbound": "🎯 全球直连"
-            },
-            {
-                "action": "route",
-                "rule_set": "google-cn",
-                "outbound": "🎯 全球直连"
-            },
-            {
-                "action": "route",
-                "rule_set": "PikPak",
-                "outbound": "♻️ 延迟选优"
-            },
-            {
-                "action": "route",
-                "rule_set": "bilibili",
-                "outbound": "🎯 全球直连"
-            },
-            {
-                "action": "route",
-                "rule_set": "cn",
-                "outbound": "🎯 全球直连"
-            },
-            {
-                "action": "route",
-                "rule_set": "youtube",
-                "outbound": "🎞️ 油管视频"
-            },
-            {
-                "action": "route",
-                "rule_set": "ai",
-                "outbound": "🤖 人工智能"
-            },
-            {
-                "action": "route",
-                "rule_set": "max",
-                "outbound": "♻️ 延迟选优"
-            },
-            {
-                "action": "route",
-                "rule_set": "media",
-                "outbound": "♻️ 延迟选优"
-            },
-            {
-                "action": "route",
-                "rule_set": "tld-proxy",
-                "outbound": "♻️ 延迟选优"
-            },
-            {
-                "action": "route",
-                "rule_set": "proxy",
-                "outbound": "♻️ 延迟选优"
-            },
-            {
                 "action": "reject",
-                "rule_set": "category-ads-all"
+                "protocol": "quic"
             },
             {
                 "action": "route",
-                "rule_set": "privateip",
-                "outbound": "🔒 私有网络"
+                "outbound": "♻️ 延迟选优",
+                "rule_set": "PikPak"
             },
             {
                 "action": "route",
-                "rule_set": "cnip",
-                "outbound": "🎯 全球直连"
+                "outbound": "🎯 全球直连",
+                "rule_set": "cloudflare-ips"
             },
             {
                 "action": "route",
-                "rule_set": "telegramip",
-                "outbound": "📲 电报消息"
+                "outbound": "♻️ 延迟选优",
+                "rule_set": "self-force"
             },
             {
                 "action": "route",
-                "rule_set": "mediaip",
+                "outbound": "🎯 全球直连",
+                "rule_set": "self-direct"
+            },
+            {
+                "action": "route",
+                "outbound": "🎮 MABINOGI：HEROES",
+                "rule_set": "self-tiancity"
+            },
+            {
+                "action": "route",
+                "outbound": "🎯 全球直连",
+                "rule_set": "self-tcgame"
+            },
+            {
+                "action": "route",
+                "outbound": "🎯 全球直连",
+                "rule_set": "direct-app-self"
+            },
+            {
+                "action": "route",
+                "outbound": "🎯 全球直连",
+                "rule_set": "applications"
+            },
+            {
+                "action": "route",
+                "outbound": "🎯 全球直连",
+                "rule_set": "microsoft-cn"
+            },
+            {
+                "action": "route",
+                "outbound": "🎯 全球直连",
+                "rule_set": "google-cn"
+            },
+            {
+                "action": "route",
+                "outbound": "🎯 全球直连",
+                "rule_set": "cnip"
+            },
+            {
+                "action": "route",
+                "outbound": "🎯 全球直连",
+                "rule_set": "bilibili"
+            },
+            {
+                "action": "route",
+                "outbound": "🎯 全球直连",
+                "rule_set": "cn"
+            },
+            {
+                "action": "route",
+                "outbound": "🎞️ 油管视频",
+                "rule_set": "youtube"
+            },
+            {
+                "action": "route",
+                "outbound": "🤖 Grok",
+                "rule_set": "Grok"
+            },
+            {
+                "action": "route",
+                "outbound": "🤖 Perplexity",
+                "rule_set": "Perplexity"
+            },
+            {
+                "action": "route",
+                "outbound": "🤖 人工智能",
+                "rule_set": "ai"
+            },
+            {
+                "action": "route",
+                "outbound": "♻️ 延迟选优",
+                "rule_set": "max"
+            },
+            {
+                "action": "route",
+                "outbound": "♻️ 延迟选优",
+                "rule_set": "media"
+            },
+            {
+                "action": "route",
+                "outbound": "♻️ 延迟选优",
+                "rule_set": "tld-proxy"
+            },
+            {
+                "action": "route",
+                "outbound": "♻️ 延迟选优",
+                "rule_set": "proxy"
+            },
+            {
+                "action": "route",
+                "outbound": "📲 电报消息",
+                "rule_set": "telegramip"
+            },
+            {
+                "action": "route",
+                "outbound": "♻️ 延迟选优",
+                "rule_set": "mediaip"
+            },
+            {
                 "outbound": "♻️ 延迟选优"
             }
-        ],
-        "rule_set":
-        [
-            {
-                "tag": "PikPak",
-                "type": "remote",
-                "format": "binary",
-                "download_detour": "♻️ 延迟选优",
-                "url": "https://raw.githubusercontent.com/usernamelessss/singbox_ruleset_use/refs/heads/main/rule/PikPak/PikPak_No_IP.srs"
-            },
-            {
-                "tag": "self-tcgame",
-                "type": "remote",
-                "format": "binary",
-                "download_detour": "♻️ 延迟选优",
-                "url": "https://raw.githubusercontent.com/usernamelessss/singbox_ruleset/refs/heads/main/rule/self/self-game/self-tcgame.srs"
-            },
-            {
-                "tag": "self-tiancity",
-                "type": "remote",
-                "format": "binary",
-                "download_detour": "♻️ 延迟选优",
-                "url": "https://raw.githubusercontent.com/usernamelessss/singbox_ruleset/refs/heads/main/rule/self/self-game/self-tiancity.srs"
-            },
-            {
-                "tag": "self-force",
-                "type": "remote",
-                "format": "binary",
-                "download_detour": "♻️ 延迟选优",
-                "url": "https://raw.githubusercontent.com/usernamelessss/singbox_ruleset/refs/heads/main/rule/self/self-proxy/Force/Force.srs"
-            },
-            {
-                "tag": "private",
-                "type": "remote",
-                "format": "binary",
-                "download_detour": "♻️ 延迟选优",
-                "url": "https://raw.githubusercontent.com/DustinWin/ruleset_geodata/refs/heads/sing-box-ruleset/private.srs"
-            },
-            {
-                "tag": "category-ads-all",
-                "type": "remote",
-                "format": "binary",
-                "download_detour": "♻️ 延迟选优",
-                "url": "https://raw.githubusercontent.com/DustinWin/ruleset_geodata/refs/heads/sing-box-ruleset/ads.srs"
-            },
-            {
-                "tag": "applications",
-                "type": "remote",
-                "format": "binary",
-                "download_detour": "♻️ 延迟选优",
-                "url": "https://raw.githubusercontent.com/DustinWin/ruleset_geodata/refs/heads/sing-box-ruleset/applications.srs"
-            },
-            {
-                "tag": "self-direct",
-                "type": "remote",
-                "url": "https://raw.githubusercontent.com/usernamelessss/singbox_ruleset/refs/heads/main/rule/self/self-direct/self-direct.srs",
-                "format": "binary",
-                "download_detour": "♻️ 延迟选优"
-            },
-            {
-                "tag": "microsoft-cn",
-                "type": "remote",
-                "format": "binary",
-                "download_detour": "♻️ 延迟选优",
-                "url": "https://raw.githubusercontent.com/DustinWin/ruleset_geodata/refs/heads/sing-box-ruleset/microsoft-cn.srs"
-            },
-            {
-                "tag": "google-cn",
-                "type": "remote",
-                "format": "binary",
-                "download_detour": "♻️ 延迟选优",
-                "url": "https://raw.githubusercontent.com/DustinWin/ruleset_geodata/refs/heads/sing-box-ruleset/google-cn.srs"
-            },
-            {
-                "tag": "max",
-                "type": "remote",
-                "format": "binary",
-                "download_detour": "♻️ 延迟选优",
-                "url": "https://raw.githubusercontent.com/DustinWin/ruleset_geodata/refs/heads/sing-box-ruleset/max.srs"
-            },
-            {
-                "tag": "youtube",
-                "type": "remote",
-                "format": "binary",
-                "download_detour": "♻️ 延迟选优",
-                "url": "https://raw.githubusercontent.com/DustinWin/ruleset_geodata/refs/heads/sing-box-ruleset/youtube.srs"
-            },
-            {
-                "tag": "direct-app-self",
-                "type": "remote",
-                "url": "https://raw.githubusercontent.com/usernamelessss/singbox_ruleset/refs/heads/main/rule/self/self-direct/self-process.srs",
-                "format": "binary",
-                "download_detour": "♻️ 延迟选优"
-            },
-            {
-                "tag": "bilibili",
-                "type": "remote",
-                "format": "binary",
-                "download_detour": "♻️ 延迟选优",
-                "url": "https://raw.githubusercontent.com/DustinWin/ruleset_geodata/refs/heads/sing-box-ruleset/bilibili.srs"
-            },
-            {
-                "tag": "media",
-                "type": "remote",
-                "format": "binary",
-                "download_detour": "♻️ 延迟选优",
-                "url": "https://raw.githubusercontent.com/DustinWin/ruleset_geodata/refs/heads/sing-box-ruleset/media.srs"
-            },
-            {
-                "tag": "ai",
-                "type": "remote",
-                "format": "binary",
-                "download_detour": "♻️ 延迟选优",
-                "url": "https://raw.githubusercontent.com/DustinWin/ruleset_geodata/refs/heads/sing-box-ruleset/ai.srs"
-            },
-            {
-                "tag": "tld-proxy",
-                "type": "remote",
-                "format": "binary",
-                "download_detour": "♻️ 延迟选优",
-                "url": "https://raw.githubusercontent.com/DustinWin/ruleset_geodata/refs/heads/sing-box-ruleset/tld-proxy.srs"
-            },
-            {
-                "tag": "cn",
-                "type": "remote",
-                "format": "binary",
-                "download_detour": "♻️ 延迟选优",
-                "url": "https://raw.githubusercontent.com/DustinWin/ruleset_geodata/refs/heads/sing-box-ruleset/cn.srs"
-            },
-            {
-                "tag": "privateip",
-                "type": "remote",
-                "format": "binary",
-                "download_detour": "♻️ 延迟选优",
-                "url": "https://raw.githubusercontent.com/DustinWin/ruleset_geodata/refs/heads/sing-box-ruleset/privateip.srs"
-            },
-            {
-                "tag": "cnip",
-                "type": "remote",
-                "format": "binary",
-                "download_detour": "♻️ 延迟选优",
-                "url": "https://raw.githubusercontent.com/DustinWin/ruleset_geodata/refs/heads/sing-box-ruleset/cnip.srs"
-            },
-            {
-                "tag": "telegramip",
-                "type": "remote",
-                "format": "binary",
-                "download_detour": "♻️ 延迟选优",
-                "url": "https://raw.githubusercontent.com/DustinWin/ruleset_geodata/refs/heads/sing-box-ruleset/telegramip.srs"
-            },
-            {
-                "tag": "mediaip",
-                "type": "remote",
-                "format": "binary",
-                "download_detour": "♻️ 延迟选优",
-                "url": "https://raw.githubusercontent.com/DustinWin/ruleset_geodata/refs/heads/sing-box-ruleset/mediaip.srs"
-            },
-            {
-                "tag": "self-reject",
-                "type": "remote",
-                "url": "https://raw.githubusercontent.com/usernamelessss/singbox_ruleset/refs/heads/main/rule/self/self-reject/self-reject.srs",
-                "format": "binary",
-                "download_detour": "♻️ 延迟选优"
-            },
-            {
-                "tag": "fakeip-filter",
-                "type": "remote",
-                "format": "binary",
-                "url": "https://raw.githubusercontent.com/DustinWin/ruleset_geodata/refs/heads/sing-box-ruleset/fakeip-filter.srs",
-                "download_detour": "♻️ 延迟选优"
-            },
-            {
-                "tag": "proxy",
-                "type": "remote",
-                "format": "binary",
-                "url": "https://raw.githubusercontent.com/DustinWin/ruleset_geodata/refs/heads/sing-box-ruleset/proxy.srs",
-                "download_detour": "♻️ 延迟选优"
-            }
-        ],
-        "default_domain_resolver":
-        {
-            "server": "alidns"
-        },
-        "auto_detect_interface": true,
-        "final": "🐟 漏网之鱼"
-    },
-    "dns":
-    {
-        "servers":
-        [
-            {
-                "tag": "alidns",
-                "type": "https",
-                "server": "dns.alidns.com",
-                "domain_resolver": "resolver-alidns"
-            },
-            {
-                "type": "udp",
-                "tag": "resolver-alidns",
-                "server": "223.5.5.5"
-            },
-            {
-                "type": "https",
-                "tag": "quad9",
-                "server": "dns.quad9.net",
-                "domain_resolver": "resolver-quad9",
-                "detour": "♻️ 延迟选优"
-            },
-            {
-                "type": "udp",
-                "tag": "resolver-quad9",
-                "server": "9.9.9.9",
-                "detour": "♻️ 延迟选优"
-            },
-            {
-                "type": "https",
-                "tag": "dns-google",
-                "server": "dns.google",
-                "domain_resolver": "dns-resolver-google",
-                "detour": "♻️ 延迟选优"
-            },
-            {
-                "type": "udp",
-                "tag": "dns-resolver-google",
-                "server": "8.8.8.8",
-                "detour": "♻️ 延迟选优"
-            },
-            {
-                "type": "fakeip",
-                "tag": "fakeip",
-                "inet4_range": "198.18.0.0/15"
-            }
-        ],
-        "rules":
-        [
-            {
-                "action": "route",
-                "server": "alidns",
-                "clash_mode": "direct",
-                "strategy": "ipv4_only"
-            },
-            {
-                "action": "route",
-                "server": "dns-google",
-                "clash_mode": "global",
-                "strategy": "ipv4_only"
-            },
-            {
-                "action": "route",
-                "server": "alidns",
-                "rule_set": "cn",
-                "strategy": "ipv4_only"
-            },
-            {
-                "type": "logical",
-                "mode": "and",
-                "rules":
-                [
-                    {
-                        "query_type":
-                        [
-                            "A"
-                        ]
-                    },
-                    {
-                        "rule_set": "proxy",
-                        "invert": false
-                    },
-                    {
-                        "rule_set":
-                        [
-                            "fakeip-filter"
-                        ],
-                        "invert": true
-                    }
-                ],
-                "action": "route",
-                "server": "fakeip",
-                "strategy": "ipv4_only"
-            }
-        ],
-        "disable_cache": false,
-        "disable_expire": false,
-        "independent_cache": false,
-        "final": "quad9",
-        "strategy": "ipv4_only"
+        ]
     }
 }
